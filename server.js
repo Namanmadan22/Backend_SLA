@@ -5,13 +5,18 @@ const cors = require('cors');
 // Initialize Express app
 const app = express();
 // Use the environment variable for port or fallback to 3001 locally
-const port = process.env.PORT || 3001;  // Vercel uses dynamic port
+const port = process.env.PORT || 3001;  // Local port for development
 
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
 
-// Route to handle SLA penalties submission
+// Simple GET route to check if the server is running
+app.get('/', (req, res) => {
+  res.send('Server is up and running!');
+});
+
+// Route to handle SLA penalties submission (POST)
 app.post('/submit-penalty', (req, res) => {
   const penaltyData = req.body;
 
@@ -26,7 +31,7 @@ app.post('/submit-penalty', (req, res) => {
       const { issueType, caseCount } = issue;
       const issuePenalty = perCasePenalty * caseCount;
 
-      // Log penalty calculations (no database, just logging for now)
+      // Log the penalty calculations (for now, just logging)
       console.log(`Project: ${project}, SLA Breach: ${slaBreach}, Issue: ${issueType}, Total Penalty: ${issuePenalty}`);
     });
   });
