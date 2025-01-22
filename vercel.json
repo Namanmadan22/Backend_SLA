@@ -8,7 +8,7 @@
   ],
   "routes": [
     {
-      "src": "/submit-penalty",
+      "src": "/api/(.*)",
       "dest": "/server.js"
     }
   ]
