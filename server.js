@@ -4,7 +4,7 @@ const cors = require('cors');
 
 // Initialize Express app
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3001;  // Render uses a dynamic port
 
 // Middleware
 app.use(bodyParser.json());
@@ -36,7 +36,7 @@ app.post('/submit-penalty', (req, res) => {
   res.json({ message: 'Penalty data submitted successfully.' });
 });
 
-// Export the app for Vercel deployment
-module.exports = (req, res) => {
-  app(req, res);
-};
+// Start the server
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
