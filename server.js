@@ -4,8 +4,7 @@ const cors = require('cors');
 
 // Initialize Express app
 const app = express();
-// Use the environment variable for port or fallback to 3001 locally
-const port = process.env.PORT || 3001;  // Local port for development
+const port = process.env.PORT || 3001;
 
 // Middleware
 app.use(bodyParser.json());
@@ -23,7 +22,6 @@ app.post('/submit-penalty', (req, res) => {
   penaltyData.forEach(entry => {
     const { project, slaBreach, penaltyAmount, issues } = entry;
 
-    // Loop through each issue and calculate penalty
     let totalCases = issues.reduce((sum, issue) => sum + issue.caseCount, 0);
     let perCasePenalty = totalCases ? penaltyAmount / totalCases : 0;
 
@@ -31,7 +29,6 @@ app.post('/submit-penalty', (req, res) => {
       const { issueType, caseCount } = issue;
       const issuePenalty = perCasePenalty * caseCount;
 
-      // Log the penalty calculations (for now, just logging)
       console.log(`Project: ${project}, SLA Breach: ${slaBreach}, Issue: ${issueType}, Total Penalty: ${issuePenalty}`);
     });
   });
@@ -39,7 +36,7 @@ app.post('/submit-penalty', (req, res) => {
   res.json({ message: 'Penalty data submitted successfully.' });
 });
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
+// Export the app for Vercel deployment
+module.exports = (req, res) => {
+  app(req, res);
+};
