@@ -1,28 +1,15 @@
-// Import necessary packages
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const mysql = require('mysql2');
 
 // Initialize Express app
 const app = express();
 // Use the environment variable for port or fallback to 3001 locally
-const port = process.env.PORT || 3001;  // Render will use the dynamic port
+const port = process.env.PORT || 3001;  // Vercel uses dynamic port
 
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
-
-// Create a connection pool for better connection handling
-const db = mysql.createPool({
-  host: 'localhost',  // In production, use the actual database host
-  user: 'root',
-  password: 'Namanmadan.22',  // Consider using environment variables for sensitive info
-  database: 'form_data',
-  waitForConnections: true,
-  connectionLimit: 10,  // Adjust this value as needed
-  queueLimit: 0
-});
 
 // Route to handle SLA penalties submission
 app.post('/submit-penalty', (req, res) => {
@@ -39,21 +26,11 @@ app.post('/submit-penalty', (req, res) => {
       const { issueType, caseCount } = issue;
       const issuePenalty = perCasePenalty * caseCount;
 
-      const sql = `
-        INSERT INTO penalty_calculations 
-        (project, sla_breach, issue_type, case_count, penalty_per_case, total_penalty) 
-        VALUES (?, ?, ?, ?, ?, ?)
-      `;
-      const values = [project, slaBreach, issueType, caseCount, perCasePenalty, issuePenalty];
-
-      db.query(sql, values, (err, result) => {
-        if (err) {
-          console.error('Error inserting penalty data:', err);
-        }
-      });
+      // Log penalty calculations (no database, just logging for now)
+      console.log(`Project: ${project}, SLA Breach: ${slaBreach}, Issue: ${issueType}, Total Penalty: ${issuePenalty}`);
     });
   });
- 
+
   res.json({ message: 'Penalty data submitted successfully.' });
 });
 
