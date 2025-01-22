@@ -8,7 +8,9 @@ const port = process.env.PORT || 3001;  // Render uses a dynamic port
 
 // Middleware
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({
+  origin: 'https://namanmadan22.github.io/Frontend/' // Replace with your frontend URL
+}));
 
 // Simple GET route to check if the server is running
 app.get('/', (req, res) => {
